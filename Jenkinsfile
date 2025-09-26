@@ -4,11 +4,12 @@ pipeline {
     }
 
     stages {
-        stage('Initialize') {
+        stage('Verification') {
             steps {
-                echo "Build running on a dynamic Docker agent!"
-                sh 'whoami'
-                sh 'pwd'
+                echo "Build is running inside a dynamic Docker agent!"
+                sh 'echo "--- Verifying Tools ---"'
+                sh 'node --version'
+                sh 'docker --version'
             }
         }
     }
