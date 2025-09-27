@@ -18,6 +18,8 @@ pipeline {
             steps {
                 echo '--- INSTALLING DEPENDENCIES & RUNNING TESTS ---'
                 sh 'npm install'
+		echo '--- SCANNING DEPENDENCIES FOR VULNERABILITIES ---'
+		sh 'npm audit --audit-level=high'
                 sh 'npm test'
             }
         }
