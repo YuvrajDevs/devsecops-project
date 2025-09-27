@@ -3,13 +3,29 @@ pipeline {
         label 'docker-agent'
     }
 
+    tools {
+        nodejs 'NodeJS-LTS'
+    }
+
+    environment {
+        DOCKERHUB_USERNAME = 'yuvrajdevs'
+        IMAGE_NAME = "${DOCKERHUB_USERNAME}/devsecops-project"
+        IMAGE_TAG = "build-${BUILD_NUMBER}"
+    }
+
     stages {
-        stage('Verification') {
+        stage('Build & Test App') {
             steps {
-                echo "Build is running inside a dynamic Docker agent!"
-                sh 'echo "--- Verifying Tools ---"'
-                sh 'node --version'
-                sh 'docker --version'
+                echo '--- INSTALLING DEPENDENCIES & RUNNING TESTS ---'
+                sh 'npm install'
+                sh 'npm test'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo "--- BUILDING DOCKER IMAGE: ${IMAGE_NAME}:${IMAGE_TAG} ---"
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
     }
