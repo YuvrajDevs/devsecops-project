@@ -2,16 +2,29 @@ pipeline {
     agent {
         label 'docker-agent'
     }
-
     tools {
         nodejs 'NodeJS-LTS'
     }
-
     environment {
         DOCKERHUB_USERNAME = 'yuvrajdevs'
         IMAGE_NAME = "${DOCKERHUB_USERNAME}/devsecops-project"
         IMAGE_TAG = "build-${BUILD_NUMBER}"
     }
+    stages {
+        stage('Secret Scanning with Gitleaks') {
+            steps {
+                echo '--- SCANNING FOR HARDCODED SECRETS ---'
+                sh '''
+                docker run --rm -v "${WORKSPACE}":/path zricethezav/gitleaks:latest \
+                detect --source="/path" --verbose --report-format json --report-path /path/gitleaks-report.json || true
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'gitleaks-report.json'
+                }
+            }
+        }
 
     stages {
         stage('Build & Test App') {
