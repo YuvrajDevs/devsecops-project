@@ -18,10 +18,10 @@ pipeline {
 	    steps {
 		echo '--- SCANNING FOR HARDCODED SECRETS ---'
 		sh '''
-		docker run --rm -v "${WORKSPACE}":/workdir trufflesecurity/trufflehog:latest \
-            filesystem /workdir --fail
+		 docker run --rm -v "${WORKSPACE}/.git:/git" trufflesecurity/trufflehog:latest \
+		 git file:///git --fail
 		'''
-	    }
+	   }
 	}
 
         stage('Build & Test App') {
