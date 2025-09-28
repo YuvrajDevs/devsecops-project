@@ -1,6 +1,4 @@
 
-const GITHUB_TOKEN = "ghp_a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6";
-
 const express = require('express');
 const app = express();
 const port = 8080;
