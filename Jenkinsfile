@@ -14,6 +14,16 @@ pipeline {
     }
 
     stages {
+	stage('Scan for Security') {
+	    steps {
+		echo '--- SCANNING FOR HARDCODED SECRETS ---'
+		sh '''
+		docker run --rm -v "${WORKSPACE}":/workdir trufflesecurity/trufflehog:latest \
+            filesystem /workdir --fail
+		'''
+	    }
+	}
+
         stage('Build & Test App') {
             steps {
                 echo '--- INSTALLING DEPENDENCIES & RUNNING TESTS ---'

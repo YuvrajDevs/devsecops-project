@@ -1,3 +1,6 @@
+
+const FAKE_API_KEY = "AHIF635S9D83NK"
+
 const express = require('express');
 const app = express();
 const port = 8080;
