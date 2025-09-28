@@ -19,7 +19,7 @@ pipeline {
                 echo '--- SCANNING FOR HARDCODED SECRETS ---'
                 sh '''
                 docker run --rm -v "${WORKSPACE}":/path zricethezav/gitleaks:latest \
-                detect --source="/path" --verbose --report-format json --report-path /path/gitleaks-report.json || true
+                detect --source="/path" --no-git --verbose --report-format json --report-path /path/gitleaks-report.json || true
                 '''
             }
             post {
