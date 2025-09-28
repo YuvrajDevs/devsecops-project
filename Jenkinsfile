@@ -18,8 +18,8 @@ pipeline {
             steps {
                 echo '--- INSTALLING DEPENDENCIES & RUNNING TESTS ---'
                 sh 'npm install'
-		echo '--- SCANNING DEPENDENCIES FOR VULNERABILITIES ---'
-		sh 'npm audit --audit-level=high'
+                echo '--- SCANNING DEPENDENCIES FOR VULNERABILITIES ---'
+                sh 'npm audit --audit-level=high'
                 sh 'npm test'
             }
         }
@@ -37,19 +37,19 @@ pipeline {
                     sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
                     sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
-	}
+            }
+        }
 
-	stage('Deploy Locally') {
-	   steps {
-		echo '--- Deploying new version locally ---'
-		sh '''
-		docker pull ${IMAGE_NAME}:${IMAGE_TAG}
-		docker stop devsecops-app || true
-		docker rm devsecops-app || true
-		docker run -d -p 8081:8080 --name devsecops-app ${IMAGE_NAME}:${IMAGE_TAG}
+        stage('Deploy Locally') {
+           steps {
+                echo '--- Deploying new version locally ---'
+                sh '''
+                docker pull ${IMAGE_NAME}:${IMAGE_TAG}
+                docker stop devsecops-app || true
+                docker rm devsecops-app || true
+                docker run -d -p 8081:8080 --name devsecops-app ${IMAGE_NAME}:${IMAGE_TAG}
                 '''
-		}
-	}
-     
-   }
+           }
+        }
+    }
 }
