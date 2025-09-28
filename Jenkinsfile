@@ -17,6 +17,7 @@ pipeline {
         stage('Secret Scanning with Gitleaks') {
             steps {
                 echo '--- SCANNING FOR HARDCODED SECRETS ---'
+		sh 'cat server.js'
                 sh '''
                 docker run --rm -v "${WORKSPACE}":/path zricethezav/gitleaks:latest \
                 detect --source="/path" --no-git --verbose --report-format json --report-path /path/gitleaks-report.json || true
