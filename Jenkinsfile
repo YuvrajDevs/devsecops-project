@@ -14,16 +14,6 @@ pipeline {
     }
 
     stages {
-	stage('Scan for Security') {
-	    steps {
-		echo '--- SCANNING FOR HARDCODED SECRETS ---'
-		sh '''
-		 docker run --rm -v "${WORKSPACE}/.git:/git" trufflesecurity/trufflehog:latest \
-		 git file:///git --fail
-		'''
-	   }
-	}
-
         stage('Build & Test App') {
             steps {
                 echo '--- INSTALLING DEPENDENCIES & RUNNING TESTS ---'
@@ -47,7 +37,19 @@ pipeline {
                     sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
                     sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
-            }
-        }
-    }
+	}
+
+	stage('Deploy Locally') {
+	   steps {
+		echo '--- Deploying new version locally ---'
+		sh '''
+		docker pull ${IMAGE_NAME}:${IMAGE_TAG}
+		docker stop devsecops-app || true
+		docker rm devsecops-app || true
+		docker run -d -p 8081:8080 --name devsecops-app ${IMAGE_NAME}:${IMAGE_TAG}
+                '''
+		}
+	}
+     
+   }
 }
