@@ -1,5 +1,5 @@
 
-const FAKE_API_KEY = "AHIF635S9D83NK"
+const FAKE_API_KEY = "AKIAIOSFODNN7EXAMPLE";
 
 const express = require('express');
 const app = express();
