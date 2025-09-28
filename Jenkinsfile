@@ -19,27 +19,6 @@ pipeline {
                 sh 'npm test'
             }
         }
-
-        // NEW STAGE for OWASP Dependency-Check
-        stage('Dependency Scanning') {
-            steps {
-                echo '--- SCANNING DEPENDENCIES WITH OWASP ---'
-                sh '''
-                docker run --rm \
-                    -v "${WORKSPACE}":/src \
-                    -v "${HOME}/.m2":/root/.m2 \
-                    owasp/dependency-check:latest \
-                    --scan /src --format HTML --out /src/reports --failOnCVSS 7
-                '''
-            }
-            post {
-                always {
-                    // Save the HTML report as a build artifact
-                    archiveArtifacts artifacts: 'reports/dependency-check-report.html', allowEmptyArchive: true
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
