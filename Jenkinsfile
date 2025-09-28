@@ -2,14 +2,17 @@ pipeline {
     agent {
         label 'docker-agent'
     }
+
     tools {
         nodejs 'NodeJS-LTS'
     }
+
     environment {
         DOCKERHUB_USERNAME = 'yuvrajdevs'
         IMAGE_NAME = "${DOCKERHUB_USERNAME}/devsecops-project"
         IMAGE_TAG = "build-${BUILD_NUMBER}"
     }
+
     stages {
         stage('Secret Scanning with Gitleaks') {
             steps {
@@ -26,7 +29,6 @@ pipeline {
             }
         }
 
-    stages {
         stage('Build & Test App') {
             steps {
                 echo '--- INSTALLING DEPENDENCIES & RUNNING TESTS ---'
